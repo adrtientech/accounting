@@ -1,0 +1,1499 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+from collections import defaultdict
+import datetime
+
+# =============================================================================
+# Konfigurasi Aplikasi dan Terjemahan (i18n)
+# =============================================================================
+# Dictionary untuk terjemahan UI
+translations = {
+    "en": {
+        "title": "Financial Accounting Application",
+        "home": "Home",
+        "language": "Language",
+        "financial_statement": "FINANCIAL STATEMENT OF COMPANY",
+        "income": "Income",
+        "expenses": "Expenses",
+        "beginning_balance": "Beginning Balance",
+        "product_list": "Product List",
+        "share_capital": "Share Capital",
+        "payables_receivables": "Payables and Receivables",
+        "equipment_purchase": "Equipment Purchase",
+        "charity": "Charity",
+        "investment": "Investment",
+        "journal_entry": "Journal Entry",
+        "general_ledger": "General Ledger",
+        "trial_balance": "Trial Balance",
+        "income_statement": "Income Statement",
+        "balance_sheet": "Balance Sheet",
+        "closing_entry": "Closing Entry",
+        "product_stocking": "Product Stocking",
+        "date": "Date",
+        "product_name": "Product's Name",
+        "initial_quantity": "Initial Quantity",
+        "purchase_price": "Purchase Price",
+        "total_purchase_price": "Total Purchase Price",
+        "selling_price": "Selling Price",
+        "save": "Save",
+        "quantity_update": "Quantity Update",
+        "total_price": "Total Price",
+        "add": "Add",
+        "quantity_addition": "Quantity Addition",
+        "add_quantity": "Add Quantity",
+        "sales": "Sales",
+        "customer": "Customer",
+        "price": "Price",
+        "quantity": "Quantity",
+        "payment": "Payment",
+        "cash": "Cash",
+        "receivable": "Receivable",
+        "record": "Record",
+        "sales_return": "Sales Return",
+        "settlement": "Settlement",
+        "transaction_date": "Transaction Date",
+        "return": "Return",
+        "settlement_amount": "Settlement Amount",
+        "lending": "Lending",
+        "borrowing": "Borrowing",
+        "form_filling": "Form Filling",
+        "borrower_name": "Borrower's Name",
+        "nominal": "Nominal",
+        "receivables_payment": "Receivables Payment",
+        "debtors_list": "Debtors List",
+        "debt_payment": "Debt Payment",
+        "creditors_list": "Creditors List",
+        "lender": "Lender",
+        "option": "Option",
+        "equipment": "Equipment",
+        "building": "Building",
+        "vehicle": "Vehicle",
+        "depreciation_entry": "Depreciation Entry (End Period)",
+        "price_at_purchase": "Price at Purchase",
+        "useful_life": "Useful Life (years)",
+        "current_year_depreciation": "Current Year Depreciation",
+        "expense_entry": "Expense Entry",
+        "expense": "Expense",
+        "destination": "Destination",
+        "type_of_investment": "Type of Investment",
+        "buy": "Buy",
+        "sell": "Sell",
+        "investment_selling": "Investment Selling",
+        "company_name": "Company's Name",
+        "sell_date": "Sell Date",
+        "final_value": "Final Value",
+        "gain_loss": "Gain/Loss",
+        "submit_update": "Submit Update",
+        "paid_up_capital": "Paid-up Capital",
+        "account_title": "Account Title",
+        "debit": "Debit",
+        "credit": "Credit",
+        "total": "Total",
+        "account": "Account",
+        "balance": "Balance",
+        "revenue": "REVENUE",
+        "gross_profit": "GROSS PROFIT",
+        "operating_expenses": "OPERATING EXPENSES",
+        "total_expenses": "TOTAL EXPENSES",
+        "other_income_expenses": "OTHER INCOME AND EXPENSES",
+        "net_income": "NET INCOME",
+        "assets": "ASSETS",
+        "liabilities": "LIABILITIES",
+        "equity": "EQUITY",
+        "total_assets": "TOTAL ASSETS",
+        "total_liabilities_equity": "TOTAL LIABILITIES AND EQUITY",
+        "warn_no_selection": "No item selected.",
+        "warn_fill_fields": "Please fill all fields correctly.",
+        "success_add": "Data added successfully!",
+        "success_update": "Data updated successfully!",
+    },
+    "id": {
+        "title": "Aplikasi Akuntansi Keuangan",
+        "home": "Beranda",
+        "language": "Bahasa",
+        "financial_statement": "LAPORAN KEUANGAN PERUSAHAAN",
+        "income": "Pendapatan",
+        "expenses": "Beban",
+        "beginning_balance": "Saldo Awal",
+        "product_list": "Daftar Produk",
+        "share_capital": "Modal Saham",
+        "payables_receivables": "Utang dan Piutang",
+        "equipment_purchase": "Pembelian Aset Tetap",
+        "charity": "Amal",
+        "investment": "Investasi",
+        "journal_entry": "Jurnal Umum",
+        "general_ledger": "Buku Besar",
+        "trial_balance": "Neraca Saldo",
+        "income_statement": "Laporan Laba Rugi",
+        "balance_sheet": "Laporan Posisi Keuangan (Neraca)",
+        "closing_entry": "Jurnal Penutup",
+        "product_stocking": "Stok Produk Awal",
+        "date": "Tanggal",
+        "product_name": "Nama Produk",
+        "initial_quantity": "Kuantitas Awal",
+        "purchase_price": "Harga Beli",
+        "total_purchase_price": "Total Harga Beli",
+        "selling_price": "Harga Jual",
+        "save": "Simpan",
+        "quantity_update": "Kuantitas Terbaru",
+        "total_price": "Total Harga",
+        "add": "Tambah",
+        "quantity_addition": "Penambahan Kuantitas",
+        "add_quantity": "Jumlah Tambahan",
+        "sales": "Penjualan",
+        "customer": "Pelanggan",
+        "price": "Harga",
+        "quantity": "Kuantitas",
+        "payment": "Pembayaran",
+        "cash": "Tunai",
+        "receivable": "Piutang",
+        "record": "Catat",
+        "sales_return": "Retur Penjualan",
+        "settlement": "Pelunasan",
+        "transaction_date": "Tanggal Transaksi",
+        "return": "Retur",
+        "settlement_amount": "Jumlah Pelunasan",
+        "lending": "Pemberian Pinjaman",
+        "borrowing": "Penerimaan Pinjaman",
+        "form_filling": "Formulir Isian",
+        "borrower_name": "Nama Peminjam",
+        "nominal": "Nominal",
+        "receivables_payment": "Pembayaran Piutang",
+        "debtors_list": "Daftar Debitur",
+        "debt_payment": "Pembayaran Utang",
+        "creditors_list": "Daftar Kreditur",
+        "lender": "Pemberi Pinjaman",
+        "option": "Pilihan",
+        "equipment": "Peralatan",
+        "building": "Gedung",
+        "vehicle": "Kendaraan",
+        "depreciation_entry": "Entri Penyusutan (Akhir Periode)",
+        "price_at_purchase": "Harga Beli",
+        "useful_life": "Masa Manfaat (tahun)",
+        "current_year_depreciation": "Penyusutan Tahun Berjalan",
+        "expense_entry": "Entri Beban",
+        "expense": "Beban",
+        "destination": "Tujuan",
+        "type_of_investment": "Jenis Investasi",
+        "buy": "Beli",
+        "sell": "Jual",
+        "investment_selling": "Penjualan Investasi",
+        "company_name": "Nama Perusahaan",
+        "sell_date": "Tanggal Jual",
+        "final_value": "Nilai Akhir",
+        "gain_loss": "Laba/Rugi",
+        "submit_update": "Kirim Pembaruan",
+        "paid_up_capital": "Modal Disetor",
+        "account_title": "Nama Akun",
+        "debit": "Debit",
+        "credit": "Kredit",
+        "total": "Total",
+        "account": "Akun",
+        "balance": "Saldo",
+        "revenue": "PENDAPATAN",
+        "gross_profit": "LABA KOTOR",
+        "operating_expenses": "BEBAN OPERASIONAL",
+        "total_expenses": "TOTAL BEBAN",
+        "other_income_expenses": "PENDAPATAN DAN BEBAN LAIN-LAIN",
+        "net_income": "LABA BERSIH",
+        "assets": "ASET",
+        "liabilities": "LIABILITAS",
+        "equity": "EKUITAS",
+        "total_assets": "TOTAL ASET",
+        "total_liabilities_equity": "TOTAL LIABILITAS DAN EKUITAS",
+        "warn_no_selection": "Tidak ada item yang dipilih.",
+        "warn_fill_fields": "Harap isi semua kolom dengan benar.",
+        "success_add": "Data berhasil ditambahkan!",
+        "success_update": "Data berhasil diperbarui!",
+    }
+}
+
+# Daftar jenis beban
+expense_types_en = [
+    "Freight-in (Purchase Shipping Cost)", "Employee Salaries", "Sales/Marketing Salaries",
+    "Sales Commission", "Advertising and Promotion", "Freight-out (Sales Shipping Cost)",
+    "Building/Store/Warehouse Rent", "Electricity", "Water", "Telephone and Internet",
+    "Office Stationery", "Bank Administration Fees", "Loan Interest",
+    "Consultant/Accountant/Legal Fees", "Business Taxes (Property Tax, Income Tax, etc.)",
+    "Transportation and Fuel", "Cleaning", "Security", "Damaged or Lost Goods",
+    "Late Penalty Fees", "Business Insurance", "Employee Training and Development",
+    "Software/Application Subscription Fees", "Maintenance and Repair Costs",
+    "Donations or CSR (Corporate Social Responsibility)", "Office Refreshments",
+    "Business Guest Entertainment", "Miscellaneous Daily Operational", "Prive"
+]
+expense_types_id = [
+    "Beban Angkut Pembelian", "Gaji Karyawan", "Gaji Pemasaran/Penjualan",
+    "Komisi Penjualan", "Iklan dan Promosi", "Beban Angkut Penjualan",
+    "Sewa Gedung/Toko/Gudang", "Listrik", "Air", "Telepon dan Internet",
+    "Alat Tulis Kantor", "Biaya Administrasi Bank", "Bunga Pinjaman",
+    "Jasa Konsultan/Akuntan/Hukum", "Pajak Usaha (PBB, PPh, dll.)",
+    "Transportasi dan Bahan Bakar", "Kebersihan", "Keamanan", "Barang Rusak atau Hilang",
+    "Denda Keterlambatan", "Asuransi Usaha", "Pelatihan dan Pengembangan Karyawan",
+    "Langganan Perangkat Lunak/Aplikasi", "Biaya Pemeliharaan dan Perbaikan",
+    "Sumbangan atau CSR", "Konsumsi Kantor", "Hiburan Tamu Bisnis",
+    "Operasional Harian Lain-lain", "Prive"
+]
+
+
+# =============================================================================
+# Kelas Aplikasi Utama (Controller)
+# =============================================================================
+class AccountingApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.language_var = tk.StringVar(value="id")
+        self.language_var.trace_add("write", self.update_ui_language)
+
+        self.title(self._("title"))
+        self.geometry("1200x800")
+        self.configure(bg="#206969")
+
+        # --- Data Storage ---
+        self.product_list = []
+        self.journal_entries = []
+        self.sales_records = []
+        self.debtor_list = []
+        self.creditor_list = []
+        self.fixed_assets = []
+        self.investments = []
+        
+        # --- Styling ---
+        style = ttk.Style(self)
+        style.theme_use("clam")
+        style.configure("TFrame", background="#206969")
+        style.configure("TLabel", background="#206969", foreground="white", font=("Arial", 12))
+        style.configure("Header.TLabel", font=("Arial", 24, "bold"))
+        style.configure("PageTitle.TLabel", font=("Arial", 32, "bold"))
+        style.configure("TButton", font=("Arial", 10), borderwidth=0)
+        style.map("TButton", background=[("active", "#d3d3d3")])
+        style.configure("Nav.TButton", background="#f0e68c", foreground="black", font=("Arial", 11, "bold"), width=25, anchor="w", padding=10)
+        style.map("Nav.TButton", background=[("active", "#fffacd")])
+        style.configure("Action.TButton", background="yellow", foreground="black", font=("Arial", 12, "bold"), width=15)
+        style.map("Action.TButton", background=[("active", "#ffff99")])
+        style.configure("Treeview", rowheight=25, font=("Arial", 10))
+        style.configure("Treeview.Heading", font=("Arial", 11, "bold"), background="#90ee90", foreground="black")
+        style.map("Treeview.Heading", background=[("active", "#b0fabb")])
+        style.configure("TEntry", font=("Arial", 11))
+        style.configure("TCombobox", font=("Arial", 11))
+
+        # --- Container for pages ---
+        container = ttk.Frame(self, padding=10)
+        container.pack(fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+        # List of all page classes
+        all_pages = (
+            HomePage, ProductStockingPage, ProductListPage, QuantityAdditionPage,
+            SalesPage, SalesReturnPage, SettlementPage, PayablesReceivablesPage,
+            LendingFormPage, DebtorListPage, ReceivablePaymentPage,
+            BorrowingFormPage, CreditorListPage, DebtPaymentPage,
+            EquipmentPurchasePage, DepreciationPage, ExpensePage, CharityPage,
+            InvestmentPage, InvestmentSellingPage, ShareCapitalPage,
+            JournalEntriesPage, GeneralLedgerPage, TrialBalancePage,
+            IncomeStatementPage, BalanceSheetPage
+        )
+
+        for F in all_pages:
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame("HomePage")
+
+    def show_frame(self, page_name):
+        """Show a frame for the given page name"""
+        frame = self.frames[page_name]
+        # Call update method if it exists to refresh data
+        if hasattr(frame, 'update_view'):
+            frame.update_view()
+        frame.tkraise()
+
+    def _(self, key, **kwargs):
+        """Translate a key using the current language"""
+        lang = self.language_var.get()
+        return translations[lang].get(key, key).format(**kwargs)
+
+    def update_ui_language(self, *args):
+        """Update all UI elements when language changes"""
+        self.title(self._("title"))
+        for frame in self.frames.values():
+            if hasattr(frame, 'update_language'):
+                frame.update_language()
+
+    def add_journal_entry(self, date, description, entries):
+        """
+        Adds a new transaction to the journal.
+        - date: transaction date (string)
+        - description: a short text describing the transaction
+        - entries: a list of dictionaries, e.g.,
+          [{'account': 'Cash', 'debit': 100, 'credit': 0}, {'account': 'Sales', 'debit': 0, 'credit': 100}]
+        """
+        # Validasi bahwa debit dan kredit seimbang
+        total_debit = sum(e.get('debit', 0) for e in entries)
+        total_credit = sum(e.get('credit', 0) for e in entries)
+        if round(total_debit, 2) != round(total_credit, 2):
+            messagebox.showerror("Error", f"Journal entry is not balanced!\nDebit: {total_debit}, Credit: {total_credit}")
+            return
+
+        self.journal_entries.append({
+            "date": date,
+            "description": description,
+            "entries": entries
+        })
+        
+    def get_account_balance(self, account_name):
+        """Calculates the final balance for a specific account."""
+        balance = 0
+        account_type = self.get_account_type(account_name)
+        
+        for transaction in self.journal_entries:
+            for entry in transaction['entries']:
+                if entry['account'] == account_name:
+                    if account_type in ['asset', 'expense', 'prive']:
+                        balance += entry.get('debit', 0) - entry.get('credit', 0)
+                    else: # liability, equity, revenue
+                        balance += entry.get('credit', 0) - entry.get('debit', 0)
+        return balance
+        
+    def get_account_type(self, account_name):
+        """Determines the type of an account (asset, liability, etc.)."""
+        name_lower = account_name.lower()
+        if "expense" in name_lower or "cost of goods sold" in name_lower or "loss on sale" in name_lower:
+            return "expense"
+        if "prive" in name_lower:
+            return "prive"
+        if "payable" in name_lower:
+            return "liability"
+        if "share capital" in name_lower or "revenue" in name_lower or "gain on sale" in name_lower or "allowance" in name_lower or "accumulated depreciation" in name_lower:
+             return "equity" # Revenue and gains increase equity
+        if "receivable" in name_lower or "cash" in name_lower or "inventory" in name_lower or "equipment" in name_lower or "building" in name_lower or "vehicle" in name_lower or "investment" in name_lower or "charity" in name_lower:
+            return "asset"
+        return "unknown" # Default case
+        
+    def format_currency(self, value):
+        if value is None:
+            return "Rp0"
+        return f"Rp{value:,.0f}"
+
+# =============================================================================
+# Kelas Halaman Dasar (Base Page)
+# =============================================================================
+class BasePage(ttk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+        self.controller = controller
+        self.configure(style="TFrame")
+
+    def _(self, key, **kwargs):
+        """Shorthand for controller's translate method"""
+        return self.controller._(key, **kwargs)
+
+    def create_header(self, title_key, include_home_button=True):
+        """Creates a standard page header."""
+        header_frame = ttk.Frame(self, padding=(0, 0, 0, 20))
+        header_frame.pack(fill="x")
+
+        if include_home_button:
+            home_icon = tk.PhotoImage(file=r"home_icon.png").subsample(2, 2) # Pastikan file 'home_icon.png' ada
+            home_button = ttk.Button(header_frame, image=home_icon, command=lambda: self.controller.show_frame("HomePage"))
+            home_button.image = home_icon
+            home_button.pack(side="left", padx=(0, 20))
+
+        self.page_title_label = ttk.Label(header_frame, text=self._(title_key), style="PageTitle.TLabel")
+        self.page_title_label.pack(side="left")
+
+    def update_language(self):
+        """A placeholder method to be implemented by child pages."""
+        pass
+        
+# =============================================================================
+# Halaman Utama (Home)
+# =============================================================================
+class HomePage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_controls()
+
+    def create_controls(self):
+        # Frame Utama
+        main_frame = ttk.Frame(self)
+        main_frame.pack(expand=True, fill="both", padx=50, pady=20)
+
+        # Header
+        header_frame = ttk.Frame(main_frame)
+        header_frame.pack(fill="x", pady=(0, 30))
+        
+        self.title_label = ttk.Label(header_frame, text=self._("financial_statement"), style="Header.TLabel", anchor="center")
+        self.title_label.pack(fill="x", expand=True)
+
+        lang_frame = ttk.Frame(header_frame)
+        lang_frame.place(relx=1.0, rely=0, anchor='ne')
+        self.lang_label = ttk.Label(lang_frame, text=self._("language") + ":")
+        self.lang_label.pack(side="left", padx=5)
+        lang_menu = ttk.Combobox(lang_frame, textvariable=self.controller.language_var, values=["id", "en"], width=10)
+        lang_menu.pack(side="left")
+        
+        # Frame Konten
+        content_frame = ttk.Frame(main_frame)
+        content_frame.pack(expand=True, fill="both")
+        content_frame.columnconfigure(0, weight=1)
+        content_frame.columnconfigure(1, weight=1)
+        
+        # Box Income/Expenses
+        box_frame = ttk.Frame(content_frame)
+        box_frame.grid(row=0, column=0, columnspan=2, pady=(20, 40))
+        box_frame.columnconfigure(0, weight=1)
+        box_frame.columnconfigure(1, weight=1)
+        
+        self.btn_income = ttk.Button(box_frame, command=lambda: self.controller.show_frame("SalesPage"), style="Action.TButton", width=20)
+        self.btn_income.grid(row=0, column=0, padx=20, pady=20, ipady=15)
+        
+        self.btn_expenses = ttk.Button(box_frame, command=lambda: self.controller.show_frame("ExpensePage"), style="Action.TButton", width=20)
+        self.btn_expenses.grid(row=0, column=1, padx=20, pady=20, ipady=15)
+
+        # Frame Navigasi Kiri dan Kanan
+        left_nav_frame = ttk.Frame(content_frame)
+        left_nav_frame.grid(row=1, column=0, sticky="n", padx=20)
+        
+        right_nav_frame = ttk.Frame(content_frame)
+        right_nav_frame.grid(row=1, column=1, sticky="n", padx=20)
+
+        # Simpan semua tombol untuk di-update bahasanya
+        self.nav_buttons = {}
+        
+        left_buttons = {
+            "product_list": "ProductListPage",
+            "share_capital": "ShareCapitalPage",
+            "payables_receivables": "PayablesReceivablesPage",
+            "equipment_purchase": "EquipmentPurchasePage",
+            "charity": "CharityPage",
+            "investment": "InvestmentPage",
+        }
+        
+        right_buttons = {
+            "journal_entry": "JournalEntriesPage",
+            "general_ledger": "GeneralLedgerPage",
+            "trial_balance": "TrialBalancePage",
+            "income_statement": "IncomeStatementPage",
+            "balance_sheet": "BalanceSheetPage", # Penambahan
+        }
+
+        for text, frame_name in left_buttons.items():
+            btn = ttk.Button(left_nav_frame, command=lambda f=frame_name: self.controller.show_frame(f), style="Nav.TButton")
+            btn.pack(pady=5, fill="x")
+            self.nav_buttons[text] = btn
+
+        for text, frame_name in right_buttons.items():
+            btn = ttk.Button(right_nav_frame, command=lambda f=frame_name: self.controller.show_frame(f), style="Nav.TButton")
+            btn.pack(pady=5, fill="x")
+            self.nav_buttons[text] = btn
+            
+        self.update_language()
+
+    def update_language(self):
+        self.title_label.config(text=self._("financial_statement"))
+        self.lang_label.config(text=self._("language") + ":")
+        self.btn_income.config(text=self._("income"))
+        self.btn_expenses.config(text=self._("expenses"))
+        
+        for text, btn in self.nav_buttons.items():
+            btn.config(text=self._(text))
+
+
+# =============================================================================
+# Halaman-halaman Entri Data
+# (Disini akan dibuat semua halaman untuk input data)
+# =============================================================================
+
+# --- Modul Produk ---
+class ProductStockingPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("product_stocking")
+        self.create_form()
+
+    def create_form(self):
+        form_frame = ttk.Frame(self, padding=20)
+        form_frame.pack(expand=True)
+        
+        self.date_var = tk.StringVar(value=datetime.date.today().strftime("%d/%m/%Y"))
+        self.name_var = tk.StringVar()
+        self.quantity_var = tk.IntVar()
+        self.purchase_price_var = tk.DoubleVar()
+        self.selling_price_var = tk.DoubleVar()
+        self.total_price_var = tk.StringVar(value="Rp0")
+
+        fields = {
+            "date": self.date_var,
+            "product_name": self.name_var,
+            "initial_quantity": self.quantity_var,
+            "purchase_price": self.purchase_price_var,
+            "total_purchase_price": self.total_price_var,
+            "selling_price": self.selling_price_var
+        }
+        
+        self.labels = {}
+        self.entries = {}
+        
+        for i, (key, var) in enumerate(fields.items()):
+            label = ttk.Label(form_frame, text=self._(key))
+            label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+            self.labels[key] = label
+            
+            entry_class = ttk.Label if key == "total_purchase_price" else ttk.Entry
+            entry = entry_class(form_frame, textvariable=var, width=40)
+            if key == "total_purchase_price":
+                entry.config(font=("Arial", 11, "bold"))
+            entry.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+            self.entries[key] = entry
+            
+        # Link to product list
+        self.product_list_link = ttk.Button(form_frame, text=self._("product_list"), style="Nav.TButton", width=15,
+                                           command=lambda: self.controller.show_frame("ProductListPage"))
+        self.product_list_link.grid(row=len(fields), column=0, pady=20)
+        
+        # Save button
+        self.save_button = ttk.Button(form_frame, text=self._("save"), style="Action.TButton", command=self.save_product)
+        self.save_button.grid(row=len(fields), column=1, pady=20, sticky="e")
+        
+        self.quantity_var.trace_add("write", self.update_total)
+        self.purchase_price_var.trace_add("write", self.update_total)
+
+    def update_total(self, *args):
+        try:
+            total = self.quantity_var.get() * self.purchase_price_var.get()
+            self.total_price_var.set(self.controller.format_currency(total))
+        except (tk.TclError, ValueError):
+            self.total_price_var.set("Rp0")
+    
+    def save_product(self):
+        try:
+            date = self.date_var.get()
+            name = self.name_var.get()
+            quantity = self.quantity_var.get()
+            purchase_price = self.purchase_price_var.get()
+            selling_price = self.selling_price_var.get()
+
+            if not all([date, name, quantity > 0, purchase_price > 0, selling_price > 0]):
+                messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+                return
+            
+            total_purchase = quantity * purchase_price
+            
+            new_product = {
+                "id": len(self.controller.product_list) + 1,
+                "date": date,
+                "name": name,
+                "initial_quantity": quantity,
+                "purchase_price": purchase_price,
+                "selling_price": selling_price,
+                "quantity_update": quantity
+            }
+            self.controller.product_list.append(new_product)
+            
+            # Add Journal Entry
+            self.controller.add_journal_entry(
+                date=date,
+                description=f"Purchase of {name}",
+                entries=[
+                    {'account': 'Inventory', 'debit': total_purchase, 'credit': 0},
+                    {'account': 'Cash', 'debit': 0, 'credit': total_purchase}
+                ]
+            )
+            
+            messagebox.showinfo(self._("success"), self._("success_add"))
+            self.clear_form()
+            self.controller.show_frame("ProductListPage")
+
+        except (tk.TclError, ValueError):
+            messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+            
+    def clear_form(self):
+        self.date_var.set(datetime.date.today().strftime("%d/%m/%Y"))
+        self.name_var.set("")
+        self.quantity_var.set(0)
+        self.purchase_price_var.set(0.0)
+        self.selling_price_var.set(0.0)
+        
+    def update_language(self):
+        self.page_title_label.config(text=self._("product_stocking"))
+        self.save_button.config(text=self._("save"))
+        self.product_list_link.config(text=self._("product_list"))
+        for key, label in self.labels.items():
+            label.config(text=self._(key))
+
+class ProductListPage(BasePage):
+    # (Implementation for ProductListPage)
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("product_list")
+        self.create_widgets()
+
+    def create_widgets(self):
+        frame = ttk.Frame(self)
+        frame.pack(fill="both", expand=True, padx=20, pady=10)
+        
+        cols = ("date", "product_name", "initial_quantity", "purchase_price", "total_price", "quantity_update")
+        self.tree = ttk.Treeview(frame, columns=cols, show="headings", style="Treeview")
+        
+        for col in cols:
+            self.tree.heading(col, text=self._(col))
+            self.tree.column(col, width=150, anchor="center")
+        
+        self.tree.pack(side="left", fill="both", expand=True)
+
+        # Right side panel for actions
+        action_frame = ttk.Frame(frame, padding=10)
+        action_frame.pack(side="right", fill="y")
+        
+        self.add_button = ttk.Button(action_frame, text=self._("add"), style="Action.TButton",
+                                     command=lambda: self.controller.show_frame("QuantityAdditionPage"))
+        self.add_button.pack(pady=10)
+        
+        total_frame = ttk.Frame(action_frame, padding=10, relief="solid")
+        total_frame.pack(pady=20)
+        
+        self.total_label = ttk.Label(total_frame, text=self._("total"))
+        self.total_label.pack()
+        self.total_value_label = ttk.Label(total_frame, text="Rp0", font=("Arial", 14, "bold"))
+        self.total_value_label.pack()
+        
+    def update_view(self):
+        # Clear existing data
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+            
+        total_value = 0
+        # Populate with new data
+        for product in self.controller.product_list:
+            total_price = product['purchase_price'] * product['quantity_update']
+            total_value += total_price
+            self.tree.insert("", "end", values=(
+                product['date'],
+                product['name'],
+                product['initial_quantity'],
+                self.controller.format_currency(product['purchase_price']),
+                self.controller.format_currency(total_price),
+                product['quantity_update']
+            ))
+        self.total_value_label.config(text=self.controller.format_currency(total_value))
+        
+    def update_language(self):
+        self.page_title_label.config(text=self._("product_list"))
+        self.add_button.config(text=self._("add"))
+        self.total_label.config(text=self._("total"))
+        for col in self.tree["columns"]:
+            self.tree.heading(col, text=self._(col))
+
+
+class QuantityAdditionPage(BasePage):
+    # (Implementation for QuantityAdditionPage)
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("quantity_addition")
+        self.create_form()
+
+    def create_form(self):
+        form_frame = ttk.Frame(self, padding=20)
+        form_frame.pack(expand=True)
+        
+        self.date_var = tk.StringVar(value=datetime.date.today().strftime("%d/%m/%Y"))
+        self.product_name_var = tk.StringVar()
+        self.add_quantity_var = tk.IntVar()
+        
+        self.labels = {}
+        
+        # Date
+        self.labels["date"] = ttk.Label(form_frame, text=self._("date"))
+        self.labels["date"].grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        ttk.Entry(form_frame, textvariable=self.date_var).grid(row=0, column=1, sticky="w", padx=10, pady=5)
+        
+        # Product Name
+        self.labels["product_name"] = ttk.Label(form_frame, text=self._("product_name"))
+        self.labels["product_name"].grid(row=1, column=0, sticky="w", padx=10, pady=5)
+        self.product_combo = ttk.Combobox(form_frame, textvariable=self.product_name_var)
+        self.product_combo.grid(row=1, column=1, sticky="w", padx=10, pady=5)
+        
+        # Add Quantity
+        self.labels["add_quantity"] = ttk.Label(form_frame, text=self._("add_quantity"))
+        self.labels["add_quantity"].grid(row=2, column=0, sticky="w", padx=10, pady=5)
+        ttk.Entry(form_frame, textvariable=self.add_quantity_var).grid(row=2, column=1, sticky="w", padx=10, pady=5)
+        
+        # Add Button
+        self.add_button = ttk.Button(form_frame, text=self._("add"), style="Action.TButton", command=self.add_quantity)
+        self.add_button.grid(row=3, column=1, pady=20, sticky="e")
+    
+    def update_view(self):
+        product_names = [p['name'] for p in self.controller.product_list]
+        self.product_combo['values'] = product_names
+        if product_names:
+            self.product_name_var.set(product_names[0])
+
+    def add_quantity(self):
+        try:
+            date = self.date_var.get()
+            product_name = self.product_name_var.get()
+            quantity_to_add = self.add_quantity_var.get()
+
+            if not product_name or quantity_to_add <= 0:
+                messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+                return
+                
+            # Find the product and update it
+            product_found = None
+            for p in self.controller.product_list:
+                if p['name'] == product_name:
+                    p['quantity_update'] += quantity_to_add
+                    product_found = p
+                    break
+            
+            if product_found:
+                total_cost = quantity_to_add * product_found['purchase_price']
+                self.controller.add_journal_entry(
+                    date=date,
+                    description=f"Additional stock for {product_name}",
+                    entries=[
+                        {'account': 'Inventory', 'debit': total_cost, 'credit': 0},
+                        {'account': 'Cash', 'debit': 0, 'credit': total_cost}
+                    ]
+                )
+                messagebox.showinfo(self._("success"), self._("success_update"))
+                self.controller.show_frame("ProductListPage")
+            else:
+                messagebox.showerror("Error", f"Product '{product_name}' not found.")
+
+        except (tk.TclError, ValueError):
+            messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+
+    def update_language(self):
+        self.page_title_label.config(text=self._("quantity_addition"))
+        self.add_button.config(text=self._("add"))
+        for key, label in self.labels.items():
+            label.config(text=self._(key))
+
+# --- Modul Penjualan ---
+class SalesPage(BasePage):
+    # (Implementation for SalesPage)
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("sales")
+        self.create_form()
+    
+    def create_form(self):
+        form_frame = ttk.Frame(self, padding=20)
+        form_frame.pack(expand=True, fill="x")
+        
+        self.date_var = tk.StringVar(value=datetime.date.today().strftime("%d/%m/%Y"))
+        self.customer_var = tk.StringVar()
+        self.product_name_var = tk.StringVar()
+        self.price_var = tk.DoubleVar()
+        self.quantity_var = tk.IntVar()
+        self.total_price_var = tk.StringVar(value="Rp0")
+        self.payment_var = tk.StringVar()
+        
+        fields = {
+            "date": self.date_var, "customer": self.customer_var,
+            "product_name": self.product_name_var, "price": self.price_var,
+            "quantity": self.quantity_var, "total_price": self.total_price_var,
+            "payment": self.payment_var,
+        }
+        self.labels = {}
+        self.entries = {}
+        
+        form_grid = ttk.Frame(form_frame)
+        form_grid.pack()
+        
+        for i, (key, var) in enumerate(fields.items()):
+            label = ttk.Label(form_grid, text=self._(key))
+            label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+            self.labels[key] = label
+            
+            if key == "product_name":
+                entry = ttk.Combobox(form_grid, textvariable=var, width=38)
+                entry.bind("<<ComboboxSelected>>", self.product_selected)
+                self.entries[key] = entry
+            elif key == "payment":
+                entry = ttk.Combobox(form_grid, textvariable=var, values=[self._("cash"), self._("receivable")], width=38)
+                self.entries[key] = entry
+            elif key == "total_price":
+                 entry = ttk.Label(form_grid, textvariable=var, font=("Arial", 11, "bold"))
+            else:
+                entry = ttk.Entry(form_grid, textvariable=var, width=40)
+            
+            entry.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+        
+        # Action buttons
+        button_frame = ttk.Frame(form_frame, padding=(0, 20))
+        button_frame.pack(fill="x")
+        
+        self.sales_return_btn = ttk.Button(button_frame, text=self._("sales_return"), style="Nav.TButton", width=15,
+                                           command=lambda: self.controller.show_frame("SalesReturnPage"))
+        self.sales_return_btn.pack(side="left", padx=10)
+        
+        self.settlement_btn = ttk.Button(button_frame, text=self._("settlement"), style="Nav.TButton", width=15,
+                                           command=lambda: self.controller.show_frame("SettlementPage"))
+        self.settlement_btn.pack(side="left", padx=10)
+        
+        self.record_button = ttk.Button(button_frame, text=self._("record"), style="Action.TButton", command=self.record_sale)
+        self.record_button.pack(side="right", padx=10)
+        
+        self.quantity_var.trace_add("write", self.update_total)
+        
+    def update_view(self):
+        product_names = [p['name'] for p in self.controller.product_list if p['quantity_update'] > 0]
+        self.entries["product_name"]['values'] = product_names
+        
+    def product_selected(self, event=None):
+        product_name = self.product_name_var.get()
+        for p in self.controller.product_list:
+            if p['name'] == product_name:
+                self.price_var.set(p['selling_price'])
+                break
+        self.update_total()
+        
+    def update_total(self, *args):
+        try:
+            total = self.quantity_var.get() * self.price_var.get()
+            self.total_price_var.set(self.controller.format_currency(total))
+        except (tk.TclError, ValueError):
+            self.total_price_var.set("Rp0")
+
+    def record_sale(self):
+        try:
+            date = self.date_var.get()
+            customer = self.customer_var.get()
+            product_name = self.product_name_var.get()
+            quantity = self.quantity_var.get()
+            price = self.price_var.get()
+            payment_method_display = self.payment_var.get()
+
+            if not all([date, customer, product_name, quantity > 0, price > 0, payment_method_display]):
+                messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+                return
+            
+            # Find product to update stock and get COGS
+            product = next((p for p in self.controller.product_list if p['name'] == product_name), None)
+            if not product or product['quantity_update'] < quantity:
+                messagebox.showerror("Error", f"Not enough stock for {product_name}. Available: {product['quantity_update'] if product else 0}")
+                return
+                
+            product['quantity_update'] -= quantity
+            cogs = product['purchase_price'] * quantity
+            total_sale = price * quantity
+
+            payment_method_internal = "Cash" if payment_method_display == self._("cash") else "Account Receivable"
+
+            # Add Sale Record
+            self.controller.sales_records.append({
+                "id": len(self.controller.sales_records) + 1, "date": date, "customer": customer,
+                "product": product_name, "quantity": quantity, "price": price,
+                "total": total_sale, "cogs": cogs, "payment": payment_method_internal, "settled": (payment_method_internal == "Cash")
+            })
+
+            # Add Journal Entry
+            # 1. Revenue Entry
+            self.controller.add_journal_entry(
+                date=date,
+                description=f"Sale to {customer}",
+                entries=[
+                    {'account': payment_method_internal, 'debit': total_sale, 'credit': 0},
+                    {'account': 'Sales Revenue', 'debit': 0, 'credit': total_sale}
+                ]
+            )
+            # 2. COGS Entry
+            self.controller.add_journal_entry(
+                date=date,
+                description=f"COGS for sale to {customer}",
+                entries=[
+                    {'account': 'Cost of Goods Sold', 'debit': cogs, 'credit': 0},
+                    {'account': 'Inventory', 'debit': 0, 'credit': cogs}
+                ]
+            )
+            
+            messagebox.showinfo(self._("success"), self._("success_add"))
+            self.clear_form()
+            
+        except (tk.TclError, ValueError):
+            messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+            
+    def clear_form(self):
+        self.date_var.set(datetime.date.today().strftime("%d/%m/%Y"))
+        self.customer_var.set("")
+        self.product_name_var.set("")
+        self.price_var.set(0.0)
+        self.quantity_var.set(0)
+        self.payment_var.set("")
+        
+    def update_language(self):
+        self.page_title_label.config(text=self._("sales"))
+        self.record_button.config(text=self._("record"))
+        self.sales_return_btn.config(text=self._("sales_return"))
+        self.settlement_btn.config(text=self._("settlement"))
+        self.entries["payment"].config(values=[self._("cash"), self._("receivable")])
+        for key, label in self.labels.items():
+            label.config(text=self._(key))
+            
+class SalesReturnPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("sales_return")
+        self.create_form()
+
+    def create_form(self):
+        form_frame = ttk.Frame(self, padding=20)
+        form_frame.pack(expand=True, fill="x")
+
+        self.date_var = tk.StringVar(value=datetime.date.today().strftime("%d/%m/%Y"))
+        self.transaction_id_var = tk.StringVar()
+        self.customer_var = tk.StringVar()
+        self.product_var = tk.StringVar()
+        self.total_price_var = tk.StringVar()
+
+        self.labels = {}
+        fields = {
+            "date": self.date_var, "transaction_date": self.transaction_id_var,
+            "customer": self.customer_var, "product": self.product_var,
+            "total_price": self.total_price_var,
+        }
+
+        form_grid = ttk.Frame(form_frame)
+        form_grid.pack()
+        
+        for i, (key, var) in enumerate(fields.items()):
+            label = ttk.Label(form_grid, text=self._(key))
+            label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+            self.labels[key] = label
+
+            if key == "transaction_date":
+                entry = ttk.Combobox(form_grid, textvariable=var, width=38)
+                entry.bind("<<ComboboxSelected>>", self.transaction_selected)
+            elif key in ["customer", "product", "total_price"]:
+                entry = ttk.Label(form_grid, textvariable=var, font=("Arial", 11, "bold"))
+            else:
+                entry = ttk.Entry(form_grid, textvariable=var, width=40)
+            entry.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+
+        self.return_button = ttk.Button(form_grid, text=self._("return"), style="Action.TButton", command=self.process_return)
+        self.return_button.grid(row=len(fields), column=1, sticky="e", pady=20)
+
+    def update_view(self):
+        # Transaction date in combobox will be displayed as "ID - Date - Customer - Product"
+        display_list = [f"{s['id']} - {s['date']} - {s['customer']} - {s['product']}" for s in self.controller.sales_records]
+        self.children['!frame2']['!frame']['!combobox']['values'] = display_list
+
+    def transaction_selected(self, event=None):
+        selected_display = self.transaction_id_var.get()
+        if not selected_display:
+            return
+        
+        trans_id = int(selected_display.split(" - ")[0])
+        sale = next((s for s in self.controller.sales_records if s['id'] == trans_id), None)
+
+        if sale:
+            self.customer_var.set(sale['customer'])
+            self.product_var.set(sale['product'])
+            self.total_price_var.set(self.controller.format_currency(sale['total']))
+
+    def process_return(self):
+        try:
+            return_date = self.date_var.get()
+            selected_display = self.transaction_id_var.get()
+
+            if not return_date or not selected_display:
+                messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+                return
+            
+            trans_id = int(selected_display.split(" - ")[0])
+            sale = next((s for s in self.controller.sales_records if s['id'] == trans_id), None)
+            
+            if not sale:
+                messagebox.showerror("Error", "Sale record not found.")
+                return
+
+            # Add stock back
+            product = next((p for p in self.controller.product_list if p['name'] == sale['product']), None)
+            if product:
+                product['quantity_update'] += sale['quantity']
+
+            # Create reversing journal entries
+            # 1. Reverse Revenue
+            self.controller.add_journal_entry(
+                date=return_date,
+                description=f"Sales return from {sale['customer']}",
+                entries=[
+                    {'account': 'Sales Return and Allowance', 'debit': sale['total'], 'credit': 0},
+                    {'account': sale['payment'], 'debit': 0, 'credit': sale['total']}
+                ]
+            )
+            # 2. Reverse COGS
+            self.controller.add_journal_entry(
+                date=return_date,
+                description=f"COGS reversal for return from {sale['customer']}",
+                entries=[
+                    {'account': 'Inventory', 'debit': sale['cogs'], 'credit': 0},
+                    {'account': 'Cost of Goods Sold', 'debit': 0, 'credit': sale['cogs']}
+                ]
+            )
+            
+            # Remove from sales records to prevent double return
+            self.controller.sales_records = [s for s in self.controller.sales_records if s['id'] != trans_id]
+
+            messagebox.showinfo(self._("success"), "Return processed successfully!")
+            self.controller.show_frame("SalesPage")
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    def update_language(self):
+        self.page_title_label.config(text=self._("sales_return"))
+        self.return_button.config(text=self._("return"))
+        for key, label in self.labels.items():
+            label.config(text=self._(key))
+
+class SettlementPage(BasePage):
+    # (Implementation for SettlementPage)
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("settlement")
+        self.create_form()
+
+    def create_form(self):
+        form_frame = ttk.Frame(self, padding=20)
+        form_frame.pack(expand=True, fill="x")
+
+        self.date_var = tk.StringVar(value=datetime.date.today().strftime("%d/%m/%Y"))
+        self.transaction_id_var = tk.StringVar()
+        self.customer_var = tk.StringVar()
+        self.product_var = tk.StringVar()
+        self.amount_var = tk.StringVar()
+
+        self.labels = {}
+        fields = {
+            "date": self.date_var, "transaction_date": self.transaction_id_var,
+            "customer": self.customer_var, "product": self.product_var,
+            "settlement_amount": self.amount_var,
+        }
+
+        form_grid = ttk.Frame(form_frame)
+        form_grid.pack()
+        
+        for i, (key, var) in enumerate(fields.items()):
+            label = ttk.Label(form_grid, text=self._(key))
+            label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
+            self.labels[key] = label
+
+            if key == "transaction_date":
+                entry = ttk.Combobox(form_grid, textvariable=var, width=38)
+                entry.bind("<<ComboboxSelected>>", self.transaction_selected)
+            elif key in ["customer", "product", "settlement_amount"]:
+                entry = ttk.Label(form_grid, textvariable=var, font=("Arial", 11, "bold"))
+            else:
+                entry = ttk.Entry(form_grid, textvariable=var, width=40)
+            entry.grid(row=i, column=1, sticky="w", padx=10, pady=5)
+        
+        self.add_button = ttk.Button(form_grid, text=self._("add"), style="Action.TButton", command=self.process_settlement)
+        self.add_button.grid(row=len(fields), column=1, sticky="e", pady=20)
+
+    def update_view(self):
+        # Get only unsettled receivable transactions
+        receivables = [s for s in self.controller.sales_records if s['payment'] == 'Account Receivable' and not s.get('settled')]
+        display_list = [f"{s['id']} - {s['date']} - {s['customer']}" for s in receivables]
+        self.children['!frame2']['!frame']['!combobox']['values'] = display_list
+
+    def transaction_selected(self, event=None):
+        selected_display = self.transaction_id_var.get()
+        if not selected_display: return
+        
+        trans_id = int(selected_display.split(" - ")[0])
+        sale = next((s for s in self.controller.sales_records if s['id'] == trans_id), None)
+        if sale:
+            self.customer_var.set(sale['customer'])
+            self.product_var.set(sale['product'])
+            self.amount_var.set(self.controller.format_currency(sale['total']))
+            
+    def process_settlement(self):
+        try:
+            settlement_date = self.date_var.get()
+            selected_display = self.transaction_id_var.get()
+            
+            if not settlement_date or not selected_display:
+                 messagebox.showwarning(self._("warning"), self._("warn_fill_fields"))
+                 return
+            
+            trans_id = int(selected_display.split(" - ")[0])
+            sale = next((s for s in self.controller.sales_records if s['id'] == trans_id), None)
+            
+            if not sale:
+                messagebox.showerror("Error", "Sale record not found.")
+                return
+
+            # Mark as settled
+            sale['settled'] = True
+
+            # Journal entry
+            self.controller.add_journal_entry(
+                date=settlement_date,
+                description=f"Settlement from {sale['customer']}",
+                entries=[
+                    {'account': 'Cash', 'debit': sale['total'], 'credit': 0},
+                    {'account': 'Account Receivable', 'debit': 0, 'credit': sale['total']}
+                ]
+            )
+            messagebox.showinfo(self._("success"), "Settlement recorded successfully!")
+            self.controller.show_frame("SalesPage")
+            self.update_view()
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+            
+    def update_language(self):
+        self.page_title_label.config(text=self._("settlement"))
+        self.add_button.config(text=self._("add"))
+        for key, label in self.labels.items():
+            label.config(text=self._(key))
+            
+# (Continue for all other pages...)
+
+# =============================================================================
+# Halaman Laporan
+# =============================================================================
+class JournalEntriesPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("journal_entry")
+        self.create_widgets()
+        
+    def create_widgets(self):
+        frame = ttk.Frame(self, padding=10)
+        frame.pack(fill="both", expand=True)
+        
+        cols = ("date", "account_title", "debit", "credit")
+        self.tree = ttk.Treeview(frame, columns=cols, show="headings")
+        
+        self.tree.heading("date", text=self._("date"))
+        self.tree.column("date", width=100)
+        self.tree.heading("account_title", text=self._("account_title"))
+        self.tree.column("account_title", width=400, anchor="w")
+        self.tree.heading("debit", text=self._("debit"))
+        self.tree.column("debit", width=150, anchor="e")
+        self.tree.heading("credit", text=self._("credit"))
+        self.tree.column("credit", width=150, anchor="e")
+        
+        self.tree.pack(fill="both", expand=True)
+
+        # Total Frame
+        total_frame = ttk.Frame(self, padding=10)
+        total_frame.pack(fill="x")
+        
+        self.total_label = ttk.Label(total_frame, text=self._("total"), font=("Arial", 12, "bold"))
+        self.total_label.pack(side="left", padx=(400, 20))
+        
+        self.total_debit_label = ttk.Label(total_frame, text="Rp0", font=("Arial", 12, "bold"))
+        self.total_debit_label.pack(side="left", padx=50)
+
+        self.total_credit_label = ttk.Label(total_frame, text="Rp0", font=("Arial", 12, "bold"))
+        self.total_credit_label.pack(side="left", padx=50)
+        
+    def update_view(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+            
+        total_debit = 0
+        total_credit = 0
+        
+        for transaction in self.controller.journal_entries:
+            # Create a tag for styling the date row
+            tag_name = f"date_{transaction['date']}".replace('/', '_')
+            self.tree.tag_configure(tag_name, background='#f0f0f0')
+
+            first_entry = True
+            for entry in transaction['entries']:
+                debit_val = entry.get('debit', 0)
+                credit_val = entry.get('credit', 0)
+                
+                if debit_val == 0 and credit_val == 0:
+                    continue
+
+                total_debit += debit_val
+                total_credit += credit_val
+
+                # Indent subsequent entries
+                account_title = f"    {entry['account']}" if entry.get('credit', 0) > 0 else entry['account']
+                
+                values = (
+                    transaction['date'] if first_entry else "",
+                    account_title,
+                    self.controller.format_currency(debit_val) if debit_val > 0 else "",
+                    self.controller.format_currency(credit_val) if credit_val > 0 else ""
+                )
+                self.tree.insert("", "end", values=values, tags=(tag_name,))
+                first_entry = False
+
+        self.total_debit_label.config(text=self.controller.format_currency(total_debit))
+        self.total_credit_label.config(text=self.controller.format_currency(total_credit))
+
+    def update_language(self):
+        self.page_title_label.config(text=self._("journal_entry"))
+        self.total_label.config(text=self._("total"))
+        self.tree.heading("date", text=self._("date"))
+        self.tree.heading("account_title", text=self._("account_title"))
+        self.tree.heading("debit", text=self._("debit"))
+        self.tree.heading("credit", text=self._("credit"))
+        
+class GeneralLedgerPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("general_ledger")
+        self.create_widgets()
+        
+    def create_widgets(self):
+        # Top filter frame
+        filter_frame = ttk.Frame(self, padding=10)
+        filter_frame.pack(fill="x")
+        
+        self.account_label = ttk.Label(filter_frame, text=self._("account"))
+        self.account_label.pack(side="left", padx=5)
+        
+        self.account_var = tk.StringVar()
+        self.account_combo = ttk.Combobox(filter_frame, textvariable=self.account_var, width=40)
+        self.account_combo.pack(side="left", padx=5)
+        self.account_combo.bind("<<ComboboxSelected>>", self.update_ledger_view)
+
+        # Ledger view
+        report_frame = ttk.Frame(self, padding=10)
+        report_frame.pack(fill="both", expand=True)
+        
+        cols = ("date", "description", "debit", "credit", "balance")
+        self.tree = ttk.Treeview(report_frame, columns=cols, show="headings")
+        for col in cols:
+            self.tree.heading(col, text=self._(col))
+        self.tree.pack(fill="both", expand=True)
+
+    def update_view(self):
+        # Get all unique account names from the journal
+        accounts = set()
+        for transaction in self.controller.journal_entries:
+            for entry in transaction['entries']:
+                accounts.add(entry['account'])
+        
+        sorted_accounts = sorted(list(accounts))
+        self.account_combo['values'] = sorted_accounts
+        if sorted_accounts:
+            self.account_var.set(sorted_accounts[0])
+        self.update_ledger_view()
+
+    def update_ledger_view(self, event=None):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+            
+        selected_account = self.account_var.get()
+        if not selected_account:
+            return
+            
+        balance = 0
+        account_type = self.controller.get_account_type(selected_account)
+
+        for transaction in sorted(self.controller.journal_entries, key=lambda x: datetime.datetime.strptime(x['date'], "%d/%m/%Y")):
+            for entry in transaction['entries']:
+                if entry['account'] == selected_account:
+                    debit = entry.get('debit', 0)
+                    credit = entry.get('credit', 0)
+                    
+                    if account_type in ['asset', 'expense', 'prive']:
+                        balance += debit - credit
+                    else: # liability, equity, revenue
+                        balance += credit - debit
+                        
+                    self.tree.insert("", "end", values=(
+                        transaction['date'],
+                        transaction['description'],
+                        self.controller.format_currency(debit) if debit else "",
+                        self.controller.format_currency(credit) if credit else "",
+                        self.controller.format_currency(balance)
+                    ))
+                    
+    def update_language(self):
+        self.page_title_label.config(text=self._("general_ledger"))
+        self.account_label.config(text=self._("account"))
+        for col in self.tree["columns"]:
+            self.tree.heading(col, text=self._(col))
+            
+class TrialBalancePage(BasePage):
+    # (Implementation for TrialBalancePage)
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("trial_balance")
+        self.create_widgets()
+        
+    def create_widgets(self):
+        frame = ttk.Frame(self, padding=10)
+        frame.pack(fill="both", expand=True)
+        
+        cols = ("account_title", "debit", "credit")
+        self.tree = ttk.Treeview(frame, columns=cols, show="headings")
+        for col in cols:
+            self.tree.heading(col, text=self._(col))
+        
+        self.tree.column("account_title", anchor="w")
+        self.tree.column("debit", anchor="e")
+        self.tree.column("credit", anchor="e")
+
+        self.tree.pack(fill="both", expand=True)
+
+        # Total Frame
+        total_frame = ttk.Frame(self, padding=(10,5))
+        total_frame.pack(fill="x")
+        
+        self.total_label = ttk.Label(total_frame, text=self._("total"), font=("Arial", 12, "bold"))
+        self.total_label.pack(side="left", padx=10)
+        
+        self.total_debit_label = ttk.Label(total_frame, text="Rp0", font=("Arial", 12, "bold"), width=20, anchor="e")
+        self.total_debit_label.pack(side="left", padx=(250, 10))
+
+        self.total_credit_label = ttk.Label(total_frame, text="Rp0", font=("Arial", 12, "bold"), width=20, anchor="e")
+        self.total_credit_label.pack(side="left", padx=(100, 10))
+
+    def update_view(self):
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+            
+        accounts = set()
+        for transaction in self.controller.journal_entries:
+            for entry in transaction['entries']:
+                accounts.add(entry['account'])
+
+        total_debit = 0
+        total_credit = 0
+        
+        for account in sorted(list(accounts)):
+            balance = self.controller.get_account_balance(account)
+            account_type = self.controller.get_account_type(account)
+            
+            debit, credit = 0, 0
+            if account_type in ['asset', 'expense', 'prive']:
+                debit = balance
+            else:
+                credit = balance
+
+            if debit != 0 or credit != 0:
+                 self.tree.insert("", "end", values=(
+                    account,
+                    self.controller.format_currency(debit) if debit else "",
+                    self.controller.format_currency(credit) if credit else ""
+                ))
+            
+            total_debit += debit
+            total_credit += credit
+            
+        self.total_debit_label.config(text=self.controller.format_currency(total_debit))
+        self.total_credit_label.config(text=self.controller.format_currency(total_credit))
+
+    def update_language(self):
+        self.page_title_label.config(text=self._("trial_balance"))
+        self.total_label.config(text=self._("total"))
+        for col in self.tree["columns"]:
+            self.tree.heading(col, text=self._(col))
+            
+# --- Other pages to be implemented in full version
+class PayablesReceivablesPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("payables_receivables")
+        # Dummy implementation
+        ttk.Button(self, text=self._("lending"), command=lambda: self.controller.show_frame("LendingFormPage")).pack(pady=20, ipady=10)
+        ttk.Button(self, text=self._("borrowing"), command=lambda: self.controller.show_frame("BorrowingFormPage")).pack(pady=20, ipady=10)
+    def update_language(self): self.page_title_label.config(text=self._("payables_receivables"))
+class LendingFormPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("form_filling")
+        ttk.Label(self, text="Lending Form - Not Implemented").pack()
+class DebtorListPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("debtors_list")
+        ttk.Label(self, text="Debtors List - Not Implemented").pack()
+class ReceivablePaymentPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("receivables_payment")
+        ttk.Label(self, text="Receivable Payment - Not Implemented").pack()
+class BorrowingFormPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("form_filling")
+        ttk.Label(self, text="Borrowing Form - Not Implemented").pack()
+class CreditorListPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("creditors_list")
+        ttk.Label(self, text="Creditors List - Not Implemented").pack()
+class DebtPaymentPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("debt_payment")
+        ttk.Label(self, text="Debt Payment - Not Implemented").pack()
+class EquipmentPurchasePage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("equipment_purchase")
+        ttk.Label(self, text="Equipment Purchase - Not Implemented").pack()
+class DepreciationPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("depreciation_entry")
+        ttk.Label(self, text="Depreciation - Not Implemented").pack()
+class ExpensePage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("expense_entry")
+        ttk.Label(self, text="Expense Entry - Not Implemented").pack()
+class CharityPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("charity")
+        ttk.Label(self, text="Charity - Not Implemented").pack()
+class InvestmentPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("investment")
+        ttk.Label(self, text="Investment - Not Implemented").pack()
+class InvestmentSellingPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("investment_selling")
+        ttk.Label(self, text="Investment Selling - Not Implemented").pack()
+class ShareCapitalPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("share_capital")
+        ttk.Label(self, text="Share Capital - Not Implemented").pack()
+class IncomeStatementPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("income_statement")
+        ttk.Label(self, text="Income Statement - Not Implemented").pack()
+class BalanceSheetPage(BasePage):
+    def __init__(self, parent, controller):
+        super().__init__(parent, controller)
+        self.create_header("balance_sheet")
+        ttk.Label(self, text="Balance Sheet - Not Implemented").pack()
+
+# =============================================================================
+# Titik Masuk Aplikasi (Main Entry Point)
+# =============================================================================
+if __name__ == "__main__":
+    # Create a dummy home icon file if it doesn't exist
+    try:
+        with open("home_icon.png", "wb") as f:
+            # A simple 10x10 black square PNG
+            f.write(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\n\x00\x00\x00\n\x08\x02\x00\x00\x00\x90\xddS\xde\x00\x00\x00\x0cIDATx\x9cc`\x18\x05\x83\x08\x00\x00\x00\xc2\x00\x01i\xd1\x97\xd1\x00\x00\x00\x00IEND\xaeB`\x82')
+    except Exception as e:
+        print(f"Could not create dummy home icon: {e}")
+
+    app = AccountingApp()
+    app.mainloop()

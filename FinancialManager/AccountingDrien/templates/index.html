@@ -1,0 +1,850 @@
+{% extends "base.html" %}
+
+{% block title %}{{ translations.title }}{% endblock %}
+
+{% block content %}
+<div class="accounting-app">
+    <!-- Header -->
+    <header class="app-header text-center py-4 mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <div class="language-selector">
+                    <label for="language-select" class="form-label">{{ translations.language }}:</label>
+                    <select id="language-select" class="form-select form-select-sm d-inline-block w-auto">
+                        <option value="id" {% if language == 'id' %}selected{% endif %}>Bahasa Indonesia</option>
+                        <option value="en" {% if language == 'en' %}selected{% endif %}>English</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h1 class="app-title mb-0">{{ translations.title }}</h1>
+            </div>
+            <div class="col-md-4">
+                <p class="app-subtitle mb-0">{{ translations.financial_statement }}</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="row">
+        <!-- Navigation Sidebar -->
+        <div class="col-md-3">
+            <nav class="nav-sidebar">
+                <div class="nav-section">
+                    <h5 class="nav-section-title">{{ translations.beginning_balance }}</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('product-stocking')">
+                                <i class="fas fa-boxes"></i> {{ translations.product_stocking }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('share-capital')">
+                                <i class="fas fa-dollar-sign"></i> {{ translations.share_capital }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h5 class="nav-section-title">{{ translations.income }}</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('product-list')">
+                                <i class="fas fa-list"></i> {{ translations.product_list }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('quantity-addition')">
+                                <i class="fas fa-plus"></i> {{ translations.quantity_addition }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('sales')">
+                                <i class="fas fa-shopping-cart"></i> {{ translations.sales }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h5 class="nav-section-title">{{ translations.expenses }}</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('expense-entry')">
+                                <i class="fas fa-receipt"></i> {{ translations.expense_entry }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('payables-receivables')">
+                                <i class="fas fa-handshake"></i> {{ translations.payables_receivables }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('charity')">
+                                <i class="fas fa-heart"></i> {{ translations.charity }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('investment')">
+                                <i class="fas fa-chart-pie"></i> {{ translations.investment }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('lending-borrowing')">
+                                <i class="fas fa-exchange-alt"></i> {{ translations.lending }}/{{ translations.borrowing }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h5 class="nav-section-title">{{ translations.financial_statement }}</h5>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('journal-entry')">
+                                <i class="fas fa-book"></i> {{ translations.journal_entry }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('general-ledger')">
+                                <i class="fas fa-ledger"></i> {{ translations.general_ledger }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('trial-balance')">
+                                <i class="fas fa-balance-scale"></i> {{ translations.trial_balance }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('income-statement')">
+                                <i class="fas fa-chart-line"></i> {{ translations.income_statement }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showPage('balance-sheet')">
+                                <i class="fas fa-clipboard-list"></i> {{ translations.balance_sheet }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-9">
+            <main class="main-content">
+                <!-- Home Page -->
+                <div id="home-page" class="page active">
+                    <div class="welcome-section text-center py-5">
+                        <h2 class="welcome-title">{{ translations.financial_statement }}</h2>
+                        <p class="welcome-subtitle">Select a function from the navigation menu to get started</p>
+                        <div class="row mt-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card">
+                                    <i class="fas fa-chart-pie fa-3x mb-3"></i>
+                                    <h5>{{ translations.financial_statement }}</h5>
+                                    <p>Track your company's financial performance</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card">
+                                    <i class="fas fa-boxes fa-3x mb-3"></i>
+                                    <h5>{{ translations.product_list }}</h5>
+                                    <p>Manage your inventory and products</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="info-card">
+                                    <i class="fas fa-calculator fa-3x mb-3"></i>
+                                    <h5>{{ translations.journal_entry }}</h5>
+                                    <p>Record and manage financial transactions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Stocking Page -->
+                <div id="product-stocking-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.product_stocking }}</h3>
+                    </div>
+                    <form id="product-stocking-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.date }}</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.product_name }}</label>
+                                <input type="text" class="form-control" name="product_name" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.initial_quantity }}</label>
+                                <input type="number" class="form-control" name="initial_quantity" min="1" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.purchase_price }}</label>
+                                <input type="number" class="form-control" name="purchase_price" step="0.01" min="0" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.selling_price }}</label>
+                                <input type="number" class="form-control" name="selling_price" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.save }}</button>
+                    </form>
+                </div>
+
+                <!-- Share Capital Page -->
+                <div id="share-capital-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.share_capital }}</h3>
+                    </div>
+                    <form id="share-capital-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.paid_up_capital }}</label>
+                                <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.save }}</button>
+                    </form>
+                </div>
+
+                <!-- Product List Page -->
+                <div id="product-list-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.product_list }}</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ translations.product_name }}</th>
+                                    <th>{{ translations.initial_quantity }}</th>
+                                    <th>{{ translations.quantity_update }}</th>
+                                    <th>{{ translations.purchase_price }}</th>
+                                    <th>{{ translations.selling_price }}</th>
+                                    <th>{{ translations.total_purchase_price }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-list-tbody">
+                                <!-- Products will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quantity Addition Page -->
+                <div id="quantity-addition-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.quantity_addition }}</h3>
+                    </div>
+                    <form id="quantity-addition-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.product_name }}</label>
+                                <select class="form-select" name="product_name" required>
+                                    <option value="">Select Product</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.add_quantity }}</label>
+                                <input type="number" class="form-control" name="additional_quantity" min="1" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.add }}</button>
+                    </form>
+                </div>
+
+                <!-- Sales Page -->
+                <div id="sales-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.sales }}</h3>
+                    </div>
+                    <form id="sales-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.date }}</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.customer }}</label>
+                                <input type="text" class="form-control" name="customer" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.product_name }}</label>
+                                <select class="form-select" name="product_name" required>
+                                    <option value="">Select Product</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.quantity }}</label>
+                                <input type="number" class="form-control" name="quantity" min="1" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">{{ translations.price }}</label>
+                                <input type="number" class="form-control" name="price" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.payment }}</label>
+                                <select class="form-select" name="payment_type" required>
+                                    <option value="cash">{{ translations.cash }}</option>
+                                    <option value="receivable">{{ translations.receivable }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.record }}</button>
+                    </form>
+                </div>
+
+                <!-- Expense Entry Page -->
+                <div id="expense-entry-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.expense_entry }}</h3>
+                    </div>
+                    <form id="expense-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.expense }}</label>
+                                <select class="form-select" name="expense_type" required>
+                                    <option value="">Select Expense Type</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.nominal }}</label>
+                                <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">{{ translations.destination }}</label>
+                                <input type="text" class="form-control" name="destination">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.record }}</button>
+                    </form>
+                </div>
+
+                <!-- Payables and Receivables Page -->
+                <div id="payables-receivables-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.payables_receivables }}</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>{{ translations.debtors_list }}</h5>
+                            <div class="table-container">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ translations.customer }}</th>
+                                            <th>{{ translations.nominal }}</th>
+                                            <th>{{ translations.date }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="debtors-tbody">
+                                        <!-- Debtors will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>{{ translations.creditors_list }}</h5>
+                            <div class="table-container">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ translations.lender }}</th>
+                                            <th>{{ translations.nominal }}</th>
+                                            <th>{{ translations.date }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="creditors-tbody">
+                                        <!-- Creditors will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Journal Entry Page -->
+                <div id="journal-entry-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.journal_entry }}</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ translations.date }}</th>
+                                    <th>{{ translations.account_title }}</th>
+                                    <th>{{ translations.debit }}</th>
+                                    <th>{{ translations.credit }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="journal-entries-tbody">
+                                <!-- Journal entries will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- General Ledger Page -->
+                <div id="general-ledger-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.general_ledger }}</h3>
+                    </div>
+                    <div id="general-ledger-content">
+                        <!-- General ledger will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Trial Balance Page -->
+                <div id="trial-balance-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.trial_balance }}</h3>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ translations.account }}</th>
+                                    <th>{{ translations.debit }}</th>
+                                    <th>{{ translations.credit }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trial-balance-tbody">
+                                <!-- Trial balance will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Income Statement Page -->
+                <div id="income-statement-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.income_statement }}</h3>
+                    </div>
+                    <div id="income-statement-content">
+                        <!-- Income statement will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Balance Sheet Page -->
+                <div id="balance-sheet-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.balance_sheet }}</h3>
+                    </div>
+                    <div id="balance-sheet-content">
+                        <!-- Balance sheet will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Charity Page -->
+                <div id="charity-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.charity }}</h3>
+                    </div>
+                    <form id="charity-form" class="form-container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.destination }}</label>
+                                <input type="text" class="form-control" name="destination" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ translations.nominal }}</label>
+                                <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ translations.record }}</button>
+                    </form>
+                </div>
+
+                <!-- Investment Page -->
+                <div id="investment-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.investment }}</h3>
+                    </div>
+                    
+                    <!-- Investment Forms -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>{{ translations.buy }} {{ translations.investment }}</h5>
+                            <form id="investment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.company_name }}</label>
+                                    <input type="text" class="form-control" name="company_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.type_of_investment }}</label>
+                                    <select class="form-select" name="investment_type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="Stocks">Stocks</option>
+                                        <option value="Bonds">Bonds</option>
+                                        <option value="Mutual Funds">Mutual Funds</option>
+                                        <option value="Real Estate">Real Estate</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.nominal }}</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.buy }}</button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>{{ translations.sell }} {{ translations.investment }}</h5>
+                            <form id="sell-investment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.investment }}</label>
+                                    <select class="form-select" name="investment_id" required>
+                                        <option value="">Select Investment</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.final_value }}</label>
+                                    <input type="number" class="form-control" name="sell_amount" step="0.01" min="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.sell }}</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Investment List -->
+                    <div class="table-container mt-4">
+                        <h5>Current Investments</h5>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ translations.company_name }}</th>
+                                    <th>{{ translations.type_of_investment }}</th>
+                                    <th>{{ translations.date }}</th>
+                                    <th>{{ translations.nominal }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="investments-tbody">
+                                <!-- Investments will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Enhanced Payables/Receivables Page -->
+                <div id="payables-receivables-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.payables_receivables }}</h3>
+                    </div>
+                    
+                    <!-- Create New Receivable/Payable -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Create New Receivable (Piutang)</h5>
+                            <form id="receivable-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Debtor Name</label>
+                                    <input type="text" class="form-control" name="debtor_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.nominal }}</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" name="description" placeholder="Service provided, loan given, etc.">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Receivable</button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>Create New Payable (Utang)</h5>
+                            <form id="payable-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Creditor Name</label>
+                                    <input type="text" class="form-control" name="creditor_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.nominal }}</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" name="description" placeholder="Equipment purchase, service received, etc.">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Payable</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Sales Receivables Settlement -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h5>Sales Receivable Payment (Pelunasan Piutang Penjualan)</h5>
+                            <form id="sales-receivable-payment-form" class="form-container">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Customer Name</label>
+                                        <select class="form-select" name="customer_name" required>
+                                            <option value="">Select Customer</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Payment Amount</label>
+                                        <input type="number" class="form-control" name="payment_amount" step="0.01" min="0" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Purchase Description (Optional)</label>
+                                        <input type="text" class="form-control" name="purchase_description" placeholder="Used for inventory purchase, equipment, etc.">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success">Record Sales Receivable Payment</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Settlement Forms -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Other Receivable Payment (Pelunasan Piutang Lain)</h5>
+                            <form id="receivable-payment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Debtor</label>
+                                    <select class="form-select" name="debtor_name" required>
+                                        <option value="">Select Debtor</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Payment Amount</label>
+                                    <input type="number" class="form-control" name="payment_amount" step="0.01" min="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Record Payment</button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>Payable Payment (Pelunasan Utang)</h5>
+                            <form id="payable-payment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Creditor</label>
+                                    <select class="form-select" name="creditor_name" required>
+                                        <option value="">Select Creditor</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Payment Amount</label>
+                                    <input type="number" class="form-control" name="payment_amount" step="0.01" min="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Record Payment</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Sales Receivables Table -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="table-container">
+                                <h5>Sales Receivables (Piutang Penjualan)</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Amount</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-receivables-tbody">
+                                        <!-- Sales receivables will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Tables -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="table-container">
+                                <h5>{{ translations.debtors_list }} (Other)</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="debtors-tbody">
+                                        <!-- Debtors will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="table-container">
+                                <h5>{{ translations.creditors_list }}</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="creditors-tbody">
+                                        <!-- Creditors will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lending/Borrowing Page -->
+                <div id="lending-borrowing-page" class="page">
+                    <div class="page-header">
+                        <h3>{{ translations.lending }}/{{ translations.borrowing }}</h3>
+                    </div>
+                    
+                    <!-- Lending/Borrowing Forms -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>{{ translations.lending }}</h5>
+                            <form id="lending-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.borrower_name }}</label>
+                                    <input type="text" class="form-control" name="borrower_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.nominal }}</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" name="description" placeholder="Purpose of loan">
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.record }}</button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>{{ translations.borrowing }}</h5>
+                            <form id="borrowing-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.lender }}</label>
+                                    <input type="text" class="form-control" name="lender_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{ translations.nominal }}</label>
+                                    <input type="number" class="form-control" name="amount" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" name="description" placeholder="Purpose of borrowing">
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.record }}</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Loan Settlement Forms -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>{{ translations.receivables_payment }} (Loan Payment Received)</h5>
+                            <form id="loan-payment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Borrower</label>
+                                    <select class="form-select" name="borrower_name" required>
+                                        <option value="">Select Borrower</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Payment Amount</label>
+                                    <input type="number" class="form-control" name="payment_amount" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Purchase with Receivable</label>
+                                    <input type="text" class="form-control" name="purchase_description" placeholder="Optional: Description of purchase made with this loan payment">
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.record }} Payment</button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>{{ translations.debt_payment }} (Debt Payment)</h5>
+                            <form id="debt-repayment-form" class="form-container">
+                                <div class="mb-3">
+                                    <label class="form-label">Lender</label>
+                                    <select class="form-select" name="lender_name" required>
+                                        <option value="">Select Lender</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Payment Amount</label>
+                                    <input type="number" class="form-control" name="payment_amount" step="0.01" min="0" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">{{ translations.record }} Payment</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Lending/Borrowing Lists -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="table-container">
+                                <h5>{{ translations.debtors_list }} (Loans Given)</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Borrower Name</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="loans-given-tbody">
+                                        <!-- Loans given will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="table-container">
+                                <h5>{{ translations.creditors_list }} (Loans Received)</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Lender Name</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="loans-received-tbody">
+                                        <!-- Loans received will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+<!-- Success/Error Messages -->
+<div id="message-container"></div>
+{% endblock %}

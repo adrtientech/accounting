@@ -1,0 +1,381 @@
+/* Base Styling */
+body {
+    background-color: #206969;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.accounting-app {
+    min-height: 100vh;
+}
+
+/* Header Styling */
+.app-header {
+    background-color: #1a5555;
+    border-bottom: 3px solid #f0e68c;
+    margin-bottom: 2rem;
+}
+
+.app-title {
+    color: #f0e68c;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.app-subtitle {
+    color: #90ee90;
+    font-size: 1.1rem;
+}
+
+.language-selector {
+    text-align: left;
+}
+
+.language-selector label {
+    color: white;
+    font-weight: bold;
+}
+
+.language-selector select {
+    background-color: #f0e68c;
+    border: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Navigation Sidebar */
+.nav-sidebar {
+    background-color: #1a5555;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.nav-section {
+    margin-bottom: 2rem;
+}
+
+.nav-section-title {
+    color: #f0e68c;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #f0e68c;
+    padding-bottom: 0.5rem;
+}
+
+.nav-sidebar .nav-link {
+    background-color: #f0e68c;
+    color: black;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.nav-sidebar .nav-link:hover {
+    background-color: #fffacd;
+    color: black;
+}
+
+.nav-sidebar .nav-link i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    background-color: #1a5555;
+    border-radius: 10px;
+    padding: 2rem;
+    min-height: 600px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-header {
+    border-bottom: 2px solid #f0e68c;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.page-header h3 {
+    color: #f0e68c;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Forms */
+.form-container {
+    background-color: #206969;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 1rem;
+}
+
+.form-label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    background-color: white;
+    border: 2px solid #90ee90;
+    border-radius: 5px;
+    color: black;
+    font-size: 1rem;
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #f0e68c;
+    box-shadow: 0 0 0 0.2rem rgba(240, 230, 140, 0.25);
+}
+
+.btn-primary {
+    background-color: #f0e68c;
+    border: none;
+    color: black;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #ffff99;
+    color: black;
+}
+
+/* Tables */
+.table-container {
+    background-color: #206969;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    overflow-x: auto;
+}
+
+.table {
+    color: white;
+    margin-bottom: 0;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(144, 238, 144, 0.1);
+}
+
+.table thead th {
+    background-color: #90ee90;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody td {
+    border-color: #90ee90;
+    padding: 0.75rem;
+}
+
+/* Welcome Section */
+.welcome-section {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.welcome-title {
+    color: #f0e68c;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-subtitle {
+    color: #90ee90;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.info-card {
+    background-color: #206969;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card i {
+    color: #f0e68c;
+    margin-bottom: 1rem;
+}
+
+.info-card h5 {
+    color: #90ee90;
+    margin-bottom: 1rem;
+}
+
+.info-card p {
+    color: white;
+    margin-bottom: 0;
+}
+
+/* Financial Statements */
+.financial-statement {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 1rem;
+}
+
+.financial-statement h4 {
+    color: #206969;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.financial-statement .statement-section {
+    margin-bottom: 2rem;
+}
+
+.financial-statement .statement-title {
+    color: #206969;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #206969;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.financial-statement .statement-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.financial-statement .statement-total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-top: 2px solid #206969;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Ledger Styling */
+.ledger-account {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.ledger-account h5 {
+    color: #206969;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 2px solid #206969;
+    padding-bottom: 0.5rem;
+}
+
+.ledger-account .balance {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 1rem;
+    color: #206969;
+}
+
+/* Messages */
+.alert {
+    border-radius: 10px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: #90ee90;
+    border-color: #90ee90;
+    color: black;
+}
+
+.alert-danger {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .app-title {
+        font-size: 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+    
+    .nav-sidebar {
+        margin-bottom: 1rem;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .form-container {
+        padding: 1rem;
+    }
+    
+    .table-container {
+        padding: 1rem;
+    }
+}
+
+/* Animation */
+.page {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Loading States */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #90ee90;
+}
+
+.loading i {
+    font-size: 2rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
